@@ -59,3 +59,72 @@
                 where Testdate > 1991;
                 
  ```      
+ 
+  
+## 11.What is the query to get the name, email address, and subject name of all the students who have scored more than 90 marks in any subject?
+  ``` 
+    select s.Name, s.Mobile Subject,f.Obtainedmarks from  students s join 
+    Result f on s.Studentid  = f.Studentid where  f.Obtainedmarks >90
+``` 
+## 12.How can we retrieve the details of students who belong to the city of "Bangalore" and have scored less than 50 marks in any subject?
+  ```
+    select * from students f join 
+    Result q on f.Studentid = q.Studentid
+    where q.Obtainedmarks > 50 and f.City = 'Marta City'
+ ```  
+## 13What is the query to get the details of all students along with their fees and result data, sorted by their name in ascending order?
+  ```
+    select * from students f join fees q 
+    on f.Studentid  = q.Sfid  join Result s 
+    on  f.Studentid  = s.Studentid 
+    order by f.Name asc;
+ ```  
+## 14How can we fetch the name, email address, and total amount of fees paid by all the students who have not paid their fees yet?
+  ```
+    select s.Name,s.mobile, coalesce(sum(f.Amount),0)as total 
+    from students s left join fees f on s.Studentid = f.Sfid
+    where f.Amount is null 
+    group by s.Studentid;
+```   
+## 15What is the query to get the details of all students who have paid their fees for the month of March and have scored more than 70 marks in any subject?
+   ```
+     select * from students s join fees f
+     on s.Studentid = f.Sfid join Result r 
+     where  f.Amount is not null 
+     and f.Month = 'March'
+     and r.Obtainedmarks >70 
+ ```    
+## 16How can we retrieve the details of students who have not taken any test yet?
+   ```
+     select * from students s left join 
+     Result r on s.studentid = r.Studentid
+     where r.Subject is null
+ ```    
+## 17What is the query to get the name, email address, and subject name of all the students who have scored less than 40 marks in any subject?
+   ```
+     select s.Name,s.Pincode, r.Subject from students s join fees f 
+     on s.Studentid = f.Sfid  join Result r 
+     on r.Studentid = s.Studentid
+     where r.Obtainedmarks >70;
+  ```   
+## 18How can we fetch the details of students who belong to the city of "Pune" and have paid their fees for the month of January?
+   ```
+      select * from students s inner join fees f 
+      on s.Studentid = f.Sfid join Result r 
+      on r.Studentid = s.Studentid
+      where s.City like  'Marta%'
+      and f.Month  = 'jan'
+      and f.Amount is not null;
+ ```     
+## 19What is the query to get the name, email address, and mobile number of all the students who have not taken any test yet?
+   ```
+       select s.Name, s.Pincode , s.Mobile  from students s left join 
+       Result r on s.Studentid = r.Studentid
+       where r.Subject is null
+ ```      
+## 20How can we retrieve the details of students who have scored more than 60 marks in all the subjects they have taken tests for? 
+   ```
+     select * from students s join Result r
+     where r.Obtainedmarks > 60
+  ```      
+ 
