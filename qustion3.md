@@ -56,7 +56,7 @@
   ```
                  select * from students f join Result s
                  on f.Studentid = s.Studentid
-                where Testdate > 1991;
+                where Testdate < 1991;
                 
  ```      
  
@@ -70,7 +70,7 @@
   ```
     select * from students f join 
     Result q on f.Studentid = q.Studentid
-    where q.Obtainedmarks > 50 and f.City = 'Marta City'
+    where q.Obtainedmarks < 50 and f.City = 'Marta City'
  ```  
 ## 13What is the query to get the details of all students along with their fees and result data, sorted by their name in ascending order?
   ```
