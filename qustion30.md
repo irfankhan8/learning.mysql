@@ -60,11 +60,15 @@
  ``` 
  ## 12. Vo course btana hai jisme sbse jyada income hui hai 
  ```
- 
+  select c.course_name,sum(amount)as total from course c 
+   join fees f on c.courseid = f.feesid join student_course sc on
+   sc.stu_courseid = c.courseid group by c.course_name order by total desc limit 1;
  ```
  ## 13. Vo course btana hai jisme sbse kam income hui hai 
  ```
- 
+  select c.course_name, sum(amount)as total from course c join
+  fees f on c.courseid = f.feesid group by course_name 
+  order by total limit 1;
  
  ```
  ## 14. Kaunsa course hai jisme sbse jyada students hai 
@@ -74,7 +78,10 @@
   ```  
  ## 15. Kaunsa course hai jisme sbse kam students hain
  ```
-
+   select  c.course_name,count (s.studentid) as total from student s 
+   join course c on s.studentid = c.courseid join student_course sc on
+ 
+  sc.stu_courseid = s.studentid group by course_name order by total limit 1; ??
 
 ```
  
@@ -164,6 +171,10 @@
 ## 12. Vo student jinhone koi b fees jama ni krayi hai unko delete kr dena hai student table se 
  Aur iske child records Address, Result tables me hai vo vha se b delete krna hai 
 ```
+ set sql_safe_updates =0;
+ set froign_key_checks =0;
+ delete from student where studentid not in (select studentid from fees);
+ set froign_key_checks = 1;
 
 
 ```
@@ -173,18 +184,29 @@
  *  2023 Feb 25000
  *  2022 Dec 12000
 ```
-
+    select year (expenses.date)as year,month (expenses.date)as month,
+    sum(amount)as totak from expenses group by year,month;
 ```
 
 ## 14. Kaunse teacher ke batch ke students ki performance sbse best hai 
 ```
-
+  select e.name as teachername ,s.studentname,c.course_name,avg(r.obtainedmarks)as marks
+  from course c join exmpoyee e on c.teachherid = e.employeeid join student_course sc on
+  sc.stu_courseid join student s on s.studentid =sc.studentid
+  join result r on r.resultid = s.studentid
+  group by teachername, s.tudentname, c.course_name order by marks desc limit 1;
 
 
 ```
 ## 15. ek view bnana hai 
 TeacherName BatchName BatchStartDate BatchEndDate Designation TotalFeesDepositByThisBatch  TotalSalary
-
+```
+ create view teacherecord as 
+ select e.name, c.coursename,c.starDate, c.endDate,e.work,sum(f.amount)as this_batch,
+ sum(sa.amount)as total_salary from employee e join course c on c.teacherid = e.employeeid
+ join student_course sc on sc.courseid = sc.studetid
+ join salary sa on sa.employeetypeid = e.employeeid 
+ group by e.name, c.oursename, c.starDate , c.endDate,e.work ;
 
 
 
