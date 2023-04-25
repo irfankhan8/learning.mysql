@@ -272,8 +272,9 @@ TeacherName BatchName BatchStartDate BatchEndDate Designation TotalFeesDepositBy
 * Peon June 10000
 * Receptionist June 5000
 ```
-     select  e.emp_name ,s.date, s.amount from employee e join salary s 
-       on e.employeeid = s.salaryid ;
+      select e.employeeid, et.emp_typeid,date(s.date),s.amount as total from employee e
+       join salary s on e.employeeid = s.salaryid join 
+         employee_type et on et.emp_typeid = e.employeeid group by e.employeeid,et.emp_typeid;
 ```       
 
 ## 7. Employees ki totalsalary ko desc order me btao with name 
@@ -282,8 +283,8 @@ TeacherName BatchName BatchStartDate BatchEndDate Designation TotalFeesDepositBy
    *  shahrukh 120000
    *  Raja 80000
   ```
-     select e.employeename,sum(s.amount)as total from employee e 
-      join salary s on e.employeeid = s.salaryid group by e.employeeid ,e.employeename
+       select e.employeeid , e.emp_name,sum(s.amount)as total from employee e 
+        join salary s on e.employeeid = s.salaryid group by e.employeeid ,e.emp_name
         order by total desc;
 
   ```
