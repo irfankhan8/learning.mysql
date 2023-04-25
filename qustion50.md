@@ -211,3 +211,111 @@ TeacherName BatchName BatchStartDate BatchEndDate Designation TotalFeesDepositBy
 
 
 ```
+
+
+
+## 1. Student ka count print krvana hai desc order me unke city ke according. for example
+   *  totalstudents cityname
+   *  25   Jaipur 
+   *  20   agaur
+   ```
+     select city address, count(add_id) as citycount from 
+     student s join address a
+     on s.studentid = a.add_id group by city order by citycount  desc; 
+  ```   
+
+## 2. Kisi student ki sare months me kitni fees aayi hai vo btani hai sare months ki ab tak 
+*  StudentName MonthName Fees 
+* Sajid Feb, 2022 2000
+* Sajid March, 2022 1000
+* Sajid April 0
+* Sajid May 1000
+```
+     select s.name ,f.depositDate , sum(f.amount)as manth   from student s join fees f
+     on s.studentid = f.feesid group by  s.name , f.depositDate order by manth  desc;
+     
+*  Agar kisi month me koi fees ni aayi hai to 0 dhikana hai 
+```
+## 3. Kisi particular test me total kitne students pass fail hue hai vo btana hai 
+* TestId TestName TotalPass TotalFail
+* 1 Nodejs 10 5
+* 2 JS 20 10
+```
+    select t.test_name ,r.result,count(r.result)as total from result r join test t on
+   r.resultid = t.testid group by t.test_name,r.result  ;
+```   
+
+## 4. Kisi particular month me total kitne test hue hai vo btane hai 
+ * MonthName TotalTests
+ * May 20
+ * June 10
+     select date(date)as date ,count(*) as total_tests from test where
+       date(date) = '2023-01-16' group by date(date);
+
+
+## 5. Kisi particular designation pr kitne employees hai vo btana hai 
+
+ * Designation Count
+ * Teacher    10
+ * Peon 2
+ * Receptionist 1
+ ```
+       select emp_name ,count(*) as count from employee where emp_name  ='techar'  
+       group  by emp_name;
+       select emp_name ,count(*) as count from employee where emp_name  ='pion'  
+       group  by emp_name;
+ ```      
+
+## 6. Kisi particular designation ke employees ki total salary particular month me kitni hai vo btana hai 
+* Designation Month TotalSalary
+* Teacher June 25000
+* Peon June 10000
+* Receptionist June 5000
+```
+     select  e.emp_name ,s.date, s.amount from employee e join salary s 
+       on e.employeeid = s.salaryid ;
+```       
+
+## 7. Employees ki totalsalary ko desc order me btao with name 
+   *  EmployeeName totalsalary
+   *  Sajid  200000
+   *  shahrukh 120000
+   *  Raja 80000
+  ```
+     select e.employeename,sum(s.amount)as total from employee e 
+      join salary s on e.employeeid = s.salaryid group by e.employeeid ,e.employeename
+        order by total desc;
+
+  ```
+## 8. Ek new table bnani hai jisme ye columns honge 
+   *  TableName : TeacherSalaryRecord
+   *  SalaryRecordId TeacherId(foreignkey)   TotalSalary 
+  ```
+      create table TeacherSalaryRecord(
+       SalaryRecordid  int primary key auto_increment,
+        Teacherid  int ,
+         TotalSalary int not null,
+          foreign key (Teacherid) references employee (employeeid)
+            )
+  ```          
+
+##  9. Ek trigger bnana hai. Aur jab b salary table me kisi b employee ke liye entry hogito TeacherSalaryRecord table me uski totalsalary update hogi 
+
+   *  Salary  : Sajid 10000
+   *  TeacherSalaryRecord : Sajid 10000
+   *  Salary Sajid 20000 
+   *  TeacherSalaryRecord : Sajid 30000
+   ```
+     DELIMITER //
+      CREATE TRIGGER salary_Aupt
+      AFTER INSERT ON salary 
+      FOR EACH ROW
+      BEGIN
+      UPDATE TeacherSalaryRecord SET Total = TotalSalary + NEW.amount WHERE TeacherId = NEW.employeeid;
+       END;//  
+ ```
+## 10. Student table me studnetname, fathername pr index bnani hai  
+```
+ create index  index_stu on student (name,father_name)
+ 
+``` 
