@@ -1,45 +1,47 @@
    ## 1. Name of all students jinhone abi tak koi fees deposit ni ki
    ```
-    select * from student where id  not in(select distinct id from fees );
+    select * from student where studentid not in (select distinct feesid  from fees )
    ``` 
 
   ## 2. Sbse jyada fees kis student ne di hai. naam btao
   ```
-   select sum(amount) as max,name from fees f join student s
-   on s.id = f.id group by name order by max desc  limit 1 ;
+    select name student, max(f.amount) as stumax from  student s join fees f 
+    on s.studentid = f.feesid group by name order by stumax  desc limit 1
   ``` 
    
  ## 3. Sbse jyada fees me 2nd number pr jo student hai uska naam btao 
  ```
-   select name student, max(amount)as secmax , name from student s join fees f 
-   on s.id = f.id group by name order by secmax desc limit 1,1;
+   select name student , max(f.amount) as secmax,name from student s join fees f
+   on s.studentid = f.feesid group by name order by secmax  desc limit 1,1  
 ```   
  ## 4. Coaching me total kitne employees hain unka naam and designation/role show krvao
  ```
-    select count(id) from employee;
-    select  emp_name ,employee  from employee e join employee_type t on 
-    e.id = t.id group by emp_name ,id,emp_type;   
+     select emp_name employee , count(e.employeeid) as coun from 
+     employee e join employee_type et
+     on e.employeeid = et.emp_typeid group by emp_name order by coun  desc;     
  ```   
  ## 5.Kis employee ne kitni salary uthayi hai ab tak vo btao ya month wise
  ```
-   select sum(amount)as totel,name from salary s join 
-   employe e on s.id = e.id group by name ;
+   select e.employeeid,e.emp_name ,sum(amount)from employee e join salary s on 
+   e.employeeid = salaryid group by employeeid ,emp_name
  ```  
  ## 6.Vo sare students jo abi tak 1 b test me fail hue hai unka naam, subject, totalmarks, passingmarks, obtainedmarks btao
  ```
-   select student.name , test.test_name,
-   test.total_marks, test.passing_marks,result.obtainedmarks,
-   result.result from student  join result  on student.id = result.id 
-   join test  on test.id = result.id where result = 'fail';  
+   select s.studentid , s.name,t.test_name,t.total_marks,t.passing_marks,
+    r.obtainedmarks from student s join result r on s.studentid =r.resultid
+    join test t on s.studentid = t.testid and t.passing_marks > r.obtainedmarks
+    group by s.studentid ,s.name,t.test_name,t.total_marks,t.passing_marks,
+    r.obtainedmarks;  
  ```  
  ## 7. Particular month ka kharcha btao. Kharche me tume salary and expenses dono add krne hai 
  ```
+   select (select sum(amount)from salary where date(date)='2023-03-20')+
+   (select sum(amount)from expenses where date(expense_date)='2023-01-03')as total
  
-  
  ```
  ## 8. Particular month me total income btao 
  ```
-   select  sum(amount) from fees where depositDate between '2022-01-01' and '2022-01-01';
+   select sum(amount) from fees where date(depositDate) ='2022-01-01' 
 ```
  ## 9. Total income aaj tak 
  ```
@@ -51,30 +53,27 @@
 ```  
 ## 11. Kis course me kitne students hai vo btane hai 
 ```
-  coursename startdate time totalstudents
-  SELECT  c.course_name, c.startDate, c.timing, COUNT(sc.id) FROM   
-           student s JOIN student_course sc ON s.stuId = sc.stuId      
-           JOIN   course c ON c.id = sc.id  WHERE  
-           sc.id IN (SELECT   id   FROM   course   WHERE   course_name = 'Nodejs') 
-  GROUP BY sc.id , c.course_name , c.startDate , c.timing ;
+    select c.courseid,c.course_name,c.startDate,c.timing,count(c.courseid) from
+    course c  join student_course st on
+    c.courseid = st.stu_courseid group by c.courseid ,c.course_name,c.startDate,c.timing
  ``` 
  ## 12. Vo course btana hai jisme sbse jyada income hui hai 
  ```
   select c.course_name,sum(amount)as total from course c 
    join fees f on c.courseid = f.feesid join student_course sc on
-   sc.stu_courseid = c.courseid group by c.course_name order by total desc limit 1;
+   sc.stu_courseid = c.courseid group by c.course_name,c.courseid order by total desc limit 1;
  ```
  ## 13. Vo course btana hai jisme sbse kam income hui hai 
  ```
   select c.course_name, sum(amount)as total from course c join
-  fees f on c.courseid = f.feesid group by course_name 
+  fees f on c.courseid = f.feesid group by course_name ,c.courseid
   order by total limit 1;
  
  ```
  ## 14. Kaunsa course hai jisme sbse jyada students hai 
   ```
     select  c.course_name as coursename , count(sc.stuId) as stuCount from course c join 
-    student_course sc on  c.courseId = sc.courseId group by c.course_name limit 1 ;
+    student_course sc on  c.courseId = sc.courseId group by c.course_name,c.courseid limit 1 ;
   ```  
  ## 15. Kaunsa course hai jisme sbse kam students hain
  ```
