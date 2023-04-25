@@ -317,5 +317,5 @@ TeacherName BatchName BatchStartDate BatchEndDate Designation TotalFeesDepositBy
 ## 10. Student table me studnetname, fathername pr index bnani hai  
 ```
  create index  index_stu on student (name,father_name)
- 
+  
 ``` 
