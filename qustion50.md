@@ -241,17 +241,18 @@ TeacherName BatchName BatchStartDate BatchEndDate Designation TotalFeesDepositBy
 * 2 JS 20 10
 ```
     select t.test_name ,r.result,count(r.result)as total from result r join test t on
-   r.resultid = t.testid group by t.test_name,r.result  ;
+   r.resultid = t.testid group by t.test_name,r.result  ;  ??
 ```   
 
 ## 4. Kisi particular month me total kitne test hue hai vo btane hai 
  * MonthName TotalTests
  * May 20
  * June 10
+ ```
      select date(date)as date ,count(*) as total_tests from test where
        date(date) = '2023-01-16' group by date(date);
 
-
+```
 ## 5. Kisi particular designation pr kitne employees hai vo btana hai 
 
  * Designation Count
