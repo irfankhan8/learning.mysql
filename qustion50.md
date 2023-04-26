@@ -87,11 +87,13 @@
  
   ##  1. Kaunsa course hai jisme koi admission ni hua hai
   ```    
-    select * from course where courseId not in (select courseId from student_course )
+    select  course_name from course where courseid not in (select distinct courseid from
+      student_course);
  ```
   ##  2. Sbse jyada expense from expense table kis chiz ke liye hua hai 
  ```
-    select amount , exp_detail from expenses where amount =( select max(amount) from expenses)
+    select exp_detail ,sum(amount)as expens from expenses 
+    group by exp_detail order by expens desc limit 1;  
  ```
     
  ## 3. Employee list print krvani hai unki total paid salary ke descending order me
@@ -99,8 +101,9 @@
    * Shahrukh Teacher 80000
    * Rehna Peon 20000
  ```
-    select e.emp_name ,sum(s.amount) from employee e join salary s on 
-    e.employeeid = s.salaryid group by emp_name,s.amount order by amount  desc;
+    select e.employeeid,e.emp_name , sum(amount)as total from employee e left join salary s
+    on e.employeeid = s.salaryid left join employee_type et on e.employeeid = et.emp_typeid
+    group by e.employeeid,e.emp_name order by total desc; 
  ```
  ## 4. Course table ko alter krna hai aur usme ek teacherid column add krna hai jo ki foreign key hogi 
  ```
@@ -110,7 +113,7 @@
 
   ## 5. Kaunse course me kaunsa teacher pdhata hai uski detail print krvani hai CourseName CourseTime TeacherName
   ```
-     select c.course_name, c.timing,e.emp_name from course c join employee e on
+     select  c.course_name, c.timing,e.emp_name from course c join employee e on
      c.courseid = e.employeeid;
  ```
 
@@ -119,15 +122,17 @@
    *    Shahrukh JavaScript 80000
    *    Rehna HTML 20000
   ```
-    select s.name ,sum(f.amount) from student s join fees f on s.studentid = f.feesid 
-    group by s.name , f.amount order by  amount desc;
+    select s.studentid,s.name ,c.course_name,sum(amount)as total from student s join
+    fees f on s.studentid =f.feesid 
+     join course c on c.courseid = f.feesid  group by s.studentid,s.name ,c.course_name
+    order by total desc;    
  ```
  
   ## 7. Kisi b year ka total profit/loss btana hai
   ```
-     Total fees - (total salary + total expenses)
-     select ((select  sum(amount)as total from fees)
-   - (select sum(amount)as total from  salary) + (select sum(amount)as total from expenses) )
+     select (select sum(amount)from fees where year(amount)=2023)-
+    ((select sum(amount)from salary where year(amount)=2023)
+  + (select sum(amount)from expenses where year (expense_date)=2023)) as total       
 ```
   ## 8. Student count list print krvani hai unki total batch count ke descending order me
    *  Nodejs 10:00PM 10/01/2023  10/07/2023 30
