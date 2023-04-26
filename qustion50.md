@@ -188,29 +188,31 @@
  *  2023 Feb 25000
  *  2022 Dec 12000
 ```
-    select year (expenses.date)as year,month (expenses.date)as month,
-    sum(amount)as totak from expenses group by year,month;
+   select year (expense.date)as year,
+   month(expenses.date) as month,sum(amount)
+   as total from expenses group by year ,month order by total desc
 ```
 
 ## 14. Kaunse teacher ke batch ke students ki performance sbse best hai 
 ```
-  select e.name as teachername ,s.studentname,c.course_name,avg(r.obtainedmarks)as marks
-  from course c join exmpoyee e on c.teachherid = e.employeeid join student_course sc on
-  sc.stu_courseid join student s on s.studentid =sc.studentid
-  join result r on r.resultid = s.studentid
-  group by teachername, s.tudentname, c.course_name order by marks desc limit 1;
+   select e.emp_name ,s.name,c.course_name,avg(r.obtainedmarks)as marks
+      from course c join employee e on c.courseid = e.employeeid join student_course sc 
+       join student s on s.studentid =sc.stu_courseid
+       join result r on r.resultid = s.studentid
+       group by e.emp_name,s.name, c.course_name order by marks desc limit 1;  
 
 
 ```
 ## 15. ek view bnana hai 
 TeacherName BatchName BatchStartDate BatchEndDate Designation TotalFeesDepositByThisBatch  TotalSalary
 ```
- create view teacherecord as 
- select e.name, c.coursename,c.starDate, c.endDate,e.work,sum(f.amount)as this_batch,
- sum(sa.amount)as total_salary from employee e join course c on c.teacherid = e.employeeid
- join student_course sc on sc.courseid = sc.studetid
- join salary sa on sa.employeetypeid = e.employeeid 
- group by e.name, c.oursename, c.starDate , c.endDate,e.work ;
+   reate view teacherRecord as 
+     select e.emp_name,c.course_name,c.startDate,c.endDate ,sum(f.amount)as batch, sum(sa.amount)as total
+      from employee e join course c on e.employeeid = c.courseid join student_course sc on
+      c.courseid = sc.stu_courseid join student s  on sc.stu_courseid = s.studentid join
+       fees f on s.studentid = f.feesid join salary sa on e.employeeid = sa.salaryid 
+
+       group by e.emp_name,c.course_name,c.startDate,c.endDate; 
 
 
 
